@@ -2,6 +2,19 @@
 > 在面试和工作中遇到的问题，系统总结一下，温故而知新。学习虽然缓慢艰难，但是一定会有收获。
 
 ## 前端技能 / CSS
+### 移动端h5适配
+适配的原理是有个基准，在视口大小改变的时候重新计算。
+首先需要了解几个单位px，rm，rem，vw
+px像素（Pixel）。像素px是相对于显示器屏幕分辨率而言的。
+rem，相对于根元素(即html元素)font-size计算值的倍数。
+em，相对于父元素字体大小，元素的非font-size属性用em的话，相对于自身font-size
+vw，相对于视口的宽度，视口被均分为100单位的vw
+
+postcss-px-to-viewport
+
+### 绝对定位
+绝对定位的元素相对于第一个相对定位父元素的border定位。绝对元素的top表示绝对定位元素的margin的最上方距离父元素（假设是相对定位）border的最上方。
+
 ### 超出部分省略号
 单行文本省略号：
 ```
@@ -28,7 +41,7 @@ text-overflow:ellipsis;
 思考:两列等高布局，水平垂直居中
 
 ### 圆点样式
-画一个居中的圆点样式。如果在圆点样式上增加display：flex，布局无法达到要求。正确写法是有一个父元素用作定位，里面在写一个元素用作圆点展示。
+画一个圆点里面有个数字，数字居中的样式。如果在圆点样式上增加display：flex，布局无法达到要求。正确写法是有一个父元素用作定位，里面在写一个元素用作圆点展示。
 
 # 前端技能 / Javascript基础
 
@@ -382,6 +395,10 @@ Object.create =  function (o) {
 
 > [React Native开发之动画(Animations)](https://blog.csdn.net/hello_hwc/article/details/51775696)
 
+### react native是如何将js转化成native的
+React Native会在一开始生成OC模块表，然后把这个模块表传入JS中，JS参照模块表，就能间接调用OC的代码。
+相当于买了一个机器人（OC），对应一份说明书（模块表），用户（JS）参照说明书去执行机器人的操作。
+
 ### RN在安卓和IOS兼容问题
 1. 安卓是overFlow：hidden，IOS是overFlow：visible，且overflow不可以设置。用到overflow的需要将元素拿出来和父元素保持同级。
 2. 安卓lineHeight和IOS表现不一致，安卓会偏下。
@@ -524,6 +541,7 @@ hashHistory不管用？react-router 4.0之后API改变。
 
 ### vue入门
 1. computed是计算属性。watch是监听器。两者都是属性，不是函数。当有复杂计算逻辑时，请使用computed，尽量不要放在html里。
+computed 是怎么获取依赖的
 2. 生命周期，理解created，mounted，updated，destroyed。created时候实例已经创建，基本数据观测，属性和方法的运算等已经完成，但是$el 属性仍不可见。
 3. class可以是对象语法，也可以是数组语法。
 > [vue文档](https://cn.vuejs.org/v2/guide/class-and-style.html)
@@ -704,10 +722,41 @@ action
 <!-- 另外，公司项目中，RNPlus 内置了 Redux 并简化用法，我们还需要掌握在 RNPlus 下使用 Redux 的方法：https://fe-doc.corp.bianlifeng.com/MOBILE/API/RNPlus/redux/index.html。 -->
 
 ### 网络 / HTTP
+题目范围：缓存、Cookie、同源策略、CORS
+
+#### 同源策略和跨域
+
+浏览器同源策略是指"协议+域名+端口"三者相同
+
+跨域解决方案
+1. jsonp。利用script标签可以跨域请求这一特点，动态创建script
+2. 跨域资源共享（CORS）。简单请求时，浏览器会直接发送跨域请求。非简单请求时，浏览器会先发送一个预请求，服务器收到请求后设置Access-Control-Allow-Origin来判断是否允许跨域
+3. ngnix转发
+
+> 非简单请求在第一次预检（请求方法为OPTIONS）通过后，以后每次的请求就和cors请求一样。因为Win10浏览器已经自动将预检命令加入到缓存
+
+> withCredentials前端设置支持cors请求携带cookie和http认证信息
+
 >[HTTP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP)
 
 >[同源策略](https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy)
-题目范围：缓存、Cookie、同源策略、CORS
+
+>[跨域资源共享 CORS 详解](http://www.ruanyifeng.com/blog/2016/04/cors.html)
+
+>[前端常见跨域解决方案](https://segmentfault.com/a/1190000011145364)
+
+
+#### http缓存
+强缓存：强缓存是利用http头中的Expires和Cache-Control两个字段来控制的，如果没有过期，则不会与服务器进行通信，直接从缓存获取信息。如果已过期，则向浏览器发送请求。
+
+协商缓存：协商缓存就是由服务器来确定缓存资源是否可用，如果服务器判断命中缓存，则返回304。
+
+>[HTTP强缓存和协商缓存](https://segmentfault.com/a/1190000008956069)
+
+### 前端缓存 cookie session 和 storage的区别
+1. 传递方式方面，cookie在http请求头中携带，而session 和 storage仅保存在前端
+2. 数据大小方面，cookie数据不能超过4k， session和storage则大得多
+3. 有效期方面，cookie在设置过期时间内有效， session仅在当前浏览器关闭前有效，localStorage始终有效
 
 ### 网络 / SSL/TLS
 >[SSL/TSL](http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html)
@@ -759,13 +808,6 @@ mqtt：https://github.com/mcxiaoke/mqtt
 
 >[浅说 XSS 和 CSRF](https://juejin.im/entry/5b4b56fd5188251b1a7b2ac1)
 
-### http缓存
-强缓存：强缓存是利用http头中的Expires和Cache-Control两个字段来控制的，如果没有过期，则不会与服务器进行通信，直接从缓存获取信息。如果已过期，则向浏览器发送请求。
-
-协商缓存：协商缓存就是由服务器来确定缓存资源是否可用，如果服务器判断命中缓存，则返回304。
-
->[HTTP强缓存和协商缓存](https://segmentfault.com/a/1190000008956069)
-
 ### 冒泡排序，快速排序，插入排序
 
 ### js的内存机制和垃圾回收机制
@@ -774,8 +816,27 @@ mqtt：https://github.com/mcxiaoke/mqtt
 
 ### proxy和object.defineProperty区别是什么
 
-### 跨域以及解决方式
+### 常用http header
 
-### cookie session 和 storage
+### 从输入url到页面展示都发生了什么
 
-## 从输入url到页面展示都发生了什么
+### ngnix入门
+
+### babel原理（是如何将es6转成es5的）
+
+### 事件冒泡和捕获
+事件冒泡和捕获和dom树的结构有关，和样式无关。
+
+### 如何知道点击的事件传递顺序
+不冒泡的事件？？
+
+### css动画
+transition
+animation
+### 新的position和新的display
+
+<!-- 如何将文件转成hash值 -->
+
+
+
+
