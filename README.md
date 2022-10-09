@@ -766,14 +766,18 @@ RN 端参考：
 
 ---
 
-### react setState
-1. 不可以直接修改this.state，而是调用this.setState，因为this.state有可能被this.setState的值覆盖。
-2. setState后立即调用this.state不能保证获取到想要的值。这是因为是setState是一个异步操作，setState不会立即改变state的值，而是放到栈里，在合适的时候批量执行。如果实在想取，可以在setState回调函数里进行操作。
-3. 一般来说setState每次都会造成渲染，如果是不必要的渲染可以通过在shouldComponentUpdate或者pure component来解决这个问题。
+### react setState 是异步的吗
+不全是。在合成事件和钩子函数是异步的，在原生事件和setTimeout中都是同步的。
 
-> [为什么setState是异步的](https://note.youdao.com/)
+### 面试题：react setState 渲染的过程
+1、setState将state放入一个pending队列里面
+2、根据isBatchingUpdate来判断是否处于批量更新
+3、如果是，将组件加入待更新的队列；如果不是，直接遍历组件更新；
 
 ---
+
+### 面试题：讲述一下react fiber
+主要是可以中断react渲染，将控制权转移给更高优先级的操作，比如用户的交互之类的，让体验更好。
 
 ### react diff
 1. tree diff。两棵树只会对同一层次的节点进行比较。
