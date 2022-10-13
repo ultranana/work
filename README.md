@@ -790,6 +790,8 @@ RN 端参考：
 ### react生命周期
 
 [此图理解即可](https://www.cnblogs.com/qiaojie/p/6135180.html)
+![react15](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e12b2e35c8444f19b795b27e38f4c149~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
+![react16](http://upload-images.jianshu.io/upload_images/1627906-cfd00d8f8c9b34d3.jpg)
 
 ---
 
